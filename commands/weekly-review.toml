@@ -1,0 +1,4 @@
+description = "Review a week of Monologue notes"
+prompt = """
+Review Monologue notes for {{args}}. Summarize themes, decisions, commitments, unresolved items, and suggested next steps. Separate recorded commitments from your suggestions and cite every source by note title, recording date, and note ID.
+"""

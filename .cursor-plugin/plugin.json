@@ -1,0 +1,22 @@
+{
+  "name": "monologue",
+  "displayName": "Monologue",
+  "version": "1.0.0",
+  "description": "Search and review your Monologue voice notes from Cursor.",
+  "author": {
+    "name": "Every Media, Inc.",
+    "email": "support@monologue.to"
+  },
+  "homepage": "https://www.monologue.to/docs/integrations/mcp",
+  "repository": "https://github.com/EveryInc/monologue-plugin",
+  "license": "MIT",
+  "logo": "assets/logo.png",
+  "keywords": ["monologue", "voice-notes", "meeting-notes", "mcp"],
+  "skills": "skills/",
+  "commands": "commands/",
+  "mcpServers": {
+    "monologue": {
+      "url": "https://api.monologue.to/mcp"
+    }
+  }
+}

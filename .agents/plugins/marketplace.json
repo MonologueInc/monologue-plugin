@@ -1,0 +1,15 @@
+{
+  "name": "monologue",
+  "displayName": "Monologue",
+  "description": "Official Monologue plugin marketplace",
+  "plugins": [
+    {
+      "name": "monologue",
+      "description": "Search and review your Monologue voice notes.",
+      "source": "https://github.com/EveryInc/monologue-plugin.git",
+      "category": "Productivity",
+      "installation": "AVAILABLE",
+      "authentication": "ON_INSTALL"
+    }
+  ]
+}

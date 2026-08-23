@@ -1,0 +1,12 @@
+{
+  "name": "monologue",
+  "version": "1.0.0",
+  "description": "Search and review your Monologue voice notes from Gemini CLI.",
+  "mcpServers": {
+    "monologue": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@0.1.43", "https://api.monologue.to/mcp"]
+    }
+  },
+  "contextFileName": "GEMINI.md"
+}

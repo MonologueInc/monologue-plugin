@@ -1,0 +1,33 @@
+{
+  "name": "monologue",
+  "version": "1.0.0",
+  "description": "Search and review your Monologue voice notes from Codex.",
+  "author": {
+    "name": "Every Media, Inc.",
+    "email": "support@monologue.to"
+  },
+  "homepage": "https://www.monologue.to/docs/integrations/mcp",
+  "repository": "https://github.com/EveryInc/monologue-plugin",
+  "license": "MIT",
+  "keywords": ["monologue", "voice-notes", "meeting-notes", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Monologue",
+    "shortDescription": "Search and review your voice notes.",
+    "longDescription": "Connects Codex to your private Monologue library through Monologue's read-only OAuth MCP server.",
+    "developerName": "Every Media, Inc.",
+    "category": "Productivity",
+    "capabilities": ["Read-only notes access", "OAuth", "Meeting preparation", "Meeting follow-up", "Weekly review"],
+    "websiteURL": "https://www.monologue.to",
+    "privacyPolicyURL": "https://www.monologue.to/privacy",
+    "termsOfServiceURL": "https://www.monologue.to/terms",
+    "defaultPrompt": [
+      "Summarize my recent Monologue notes.",
+      "Prepare me for my next meeting using my Monologue notes.",
+      "Turn my latest meeting notes into decisions and follow-ups."
+    ],
+    "brandColor": "#00A9B7",
+    "logo": "./assets/logo.png"
+  }
+}
