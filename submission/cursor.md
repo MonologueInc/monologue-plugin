@@ -1,9 +1,9 @@
 # Cursor submission packet
 
-- Public repository: `https://github.com/EveryInc/monologue-plugin`
+- Public repository: `https://github.com/MonologueInc/monologue-plugin`
 - Plugin name: Monologue
 - Slug: `monologue`
-- Description: Search and review your private Monologue voice notes.
+- Description: Search, review, and share your private Monologue voice notes.
 - Category: Productivity
 - Website: `https://www.monologue.to`
 - Support: `https://www.monologue.to/docs/support/contact-support`

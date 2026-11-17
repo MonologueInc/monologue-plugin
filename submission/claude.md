@@ -1,11 +1,11 @@
 # Claude Code submission packet
 
-- Marketplace source: `https://github.com/EveryInc/monologue-plugin`
+- Marketplace source: `https://github.com/MonologueInc/monologue-plugin`
 - Plugin name: `monologue`
-- Description: Search and review your private Monologue voice notes.
+- Description: Search, review, and share your private Monologue voice notes.
 - Category: Productivity
 - Website: `https://www.monologue.to`
 - Support: `https://www.monologue.to/docs/support/contact-support`
 - Privacy: `https://www.monologue.to/privacy`
 
-Validate with `claude plugin validate . --strict`, then submit the public GitHub repository through [Claude's plugin submission form](https://claude.ai/settings/plugins/submit). Anthropic account verification and review occur outside this repository.
+Validate with `claude plugin validate . --strict`, then submit the public GitHub repository in the [developer portal](https://claude.ai/directory/manage) as a **Plugin bundle**. Submit `https://api.monologue.to/mcp` there as an **MCP connector** too and pair the two. Anthropic account verification and review occur outside this repository.

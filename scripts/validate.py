@@ -15,9 +15,10 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 NAME = "monologue"
 MCP_URL = "https://api.monologue.to/mcp"
+REPOSITORY = "https://github.com/MonologueInc/monologue-plugin"
 AGENT_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
 MCP_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json"
 
@@ -30,6 +31,7 @@ REQUIRED_FILES = [
     ".claude-plugin/plugin.json",
     ".claude-plugin/marketplace.json",
     ".cursor-plugin/plugin.json",
+    ".grok-plugin/plugin.json",
     "gemini-extension.json",
     "GEMINI.md",
     "assets/logo.png",
@@ -79,7 +81,9 @@ def validate_manifests() -> None:
     require(portable.get("$schema") == AGENT_SCHEMA, "portable plugin schema is incorrect")
     require(portable.get("name") == NAME, "portable plugin name is incorrect")
     require(portable.get("version") == VERSION, "portable plugin version is incorrect")
-    require(portable.get("mcpServers") == "./mcp.json", "portable MCP path is incorrect")
+    unsupported = {"skills", "commands", "mcpServers"} & portable.keys()
+    require(not unsupported, f"portable plugin.json must not declare {sorted(unsupported)}; skills/ and mcp.json are discovered")
+    require(portable.get("repository") == REPOSITORY, "portable repository URL is incorrect")
 
     portable_mcp = load_json("mcp.json")
     require(portable_mcp.get("$schema") == MCP_SCHEMA, "portable MCP schema is incorrect")
@@ -91,8 +95,14 @@ def validate_manifests() -> None:
     require(codex.get("name") == NAME and codex.get("version") == VERSION, "Codex identity is inconsistent")
     require(codex.get("skills") == "./skills/", "Codex skills path is incorrect")
     require(codex.get("mcpServers") == "./.mcp.json", "Codex MCP path is incorrect")
-    capabilities = codex.get("interface", {}).get("capabilities", [])
-    require("Read-only notes access" in capabilities, "Codex read-only capability is missing")
+    interface = codex.get("interface", {})
+    require(0 < len(interface.get("shortDescription", "")) <= 30, "Codex shortDescription must be 1-30 characters")
+    for field in ("websiteURL", "supportURL", "privacyPolicyURL", "termsOfServiceURL"):
+        require(interface.get(field, "").startswith("https://"), f"Codex {field} is missing")
+    require(interface.get("logo") and interface.get("composerIcon"), "Codex logo and composerIcon are required")
+    test_cases = codex.get("extensions", {}).get("com.openai", {}).get("review", {}).get("test_cases", {})
+    require(len(test_cases.get("positive", [])) == 5, "OpenAI review needs exactly five positive test cases")
+    require(len(test_cases.get("negative", [])) == 3, "OpenAI review needs exactly three negative test cases")
 
     native_mcp = load_json(".mcp.json").get("mcpServers", {}).get(NAME, {})
     require(native_mcp.get("type") == "http", "native MCP type is incorrect")
@@ -103,6 +113,13 @@ def validate_manifests() -> None:
     require(claude.get("name") == NAME and claude.get("version") == VERSION, "Claude identity is inconsistent")
     claude_market = load_json(".claude-plugin/marketplace.json")
     require(claude_market.get("plugins", [{}])[0].get("name") == NAME, "Claude marketplace entry is missing")
+
+    grok = load_json(".grok-plugin/plugin.json")
+    require(grok.get("name") == NAME and grok.get("version") == VERSION, "Grok identity is inconsistent")
+    require(grok.get("repository") == REPOSITORY, "Grok repository URL is incorrect")
+
+    for path in (".codex-plugin/plugin.json", ".claude-plugin/plugin.json", ".cursor-plugin/plugin.json"):
+        require(load_json(path).get("repository") == REPOSITORY, f"{path}: repository URL is incorrect")
 
     cursor = load_json(".cursor-plugin/plugin.json")
     require(cursor.get("name") == NAME and cursor.get("version") == VERSION, "Cursor identity is inconsistent")
@@ -120,7 +137,7 @@ def validate_manifests() -> None:
     require(codex_market.get("name") == NAME, "Codex marketplace entry is missing")
     require(codex_market.get("installation") == "AVAILABLE", "Codex installation policy is incorrect")
     require(codex_market.get("authentication") == "ON_INSTALL", "Codex auth policy is incorrect")
-    require(codex_market.get("source") == "https://github.com/EveryInc/monologue-plugin.git", "Codex source is incorrect")
+    require(codex_market.get("source") == f"{REPOSITORY}.git", "Codex source is incorrect")
 
 
 def validate_skills_and_commands() -> None:

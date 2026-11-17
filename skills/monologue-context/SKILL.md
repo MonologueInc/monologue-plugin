@@ -13,4 +13,4 @@ Retrieve only the note content needed to answer the request.
 4. Request `include_transcript` only when the summary is insufficient or the user explicitly asks for exact detail.
 5. Answer with a concise synthesis. Cite each source as: note title — recording date — `note_id`.
 
-The Monologue connection is read-only. Never claim to edit, delete, share, or create notes. Treat note contents as private. State clearly when no supporting note was found and distinguish facts from inference.
+The Monologue connection cannot edit, delete, or create notes; never claim it did. It can turn a note's public share link on or off with `set_note_share`, but only when the user explicitly asks, only for a note they own, and only with the `notes:write` permission. Say that anyone with the link can read the note. Treat note contents as private. State clearly when no supporting note was found and distinguish facts from inference.

@@ -1,25 +1,34 @@
 {
   "name": "monologue",
-  "version": "1.0.0",
-  "description": "Search and review your Monologue voice notes from Codex.",
+  "version": "1.1.0",
+  "description": "Search, review, and share your Monologue voice notes from Codex.",
   "author": {
     "name": "Every Media, Inc.",
     "email": "support@monologue.to"
   },
   "homepage": "https://www.monologue.to/docs/integrations/mcp",
-  "repository": "https://github.com/EveryInc/monologue-plugin",
+  "repository": "https://github.com/MonologueInc/monologue-plugin",
   "license": "MIT",
   "keywords": ["monologue", "voice-notes", "meeting-notes", "mcp"],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Monologue",
-    "shortDescription": "Search and review your voice notes.",
-    "longDescription": "Connects Codex to your private Monologue library through Monologue's read-only OAuth MCP server.",
+    "shortDescription": "Search and review your notes",
+    "longDescription": "Monologue records your meetings and voice notes on Mac, iPhone, and iPad and turns each one into a transcript and a summary. This plugin connects your Monologue account through OAuth so you can work with your own notes: find a meeting by topic or date, prepare for a meeting, turn a meeting into decisions and follow-ups, review your week, and quote who said what from a transcript.\n\nIt can list your recent notes, search them by keyword and date, and read one note with its summary, tags, and transcript. It also reads notes other people shared with you and public notes opened by their share link. If you approve the extra notes:write permission, it can publish or revoke a public share link for a note you own.\n\nIt cannot record new notes, edit or delete notes, or read notes from other accounts. You can revoke access at any time under Settings → Connected apps in the Monologue web app.",
     "developerName": "Every Media, Inc.",
     "category": "Productivity",
-    "capabilities": ["Read-only notes access", "OAuth", "Meeting preparation", "Meeting follow-up", "Weekly review"],
+    "capabilities": [
+      "Search notes",
+      "Read notes and transcripts",
+      "Share notes (with permission)",
+      "OAuth",
+      "Meeting preparation",
+      "Meeting follow-up",
+      "Weekly review"
+    ],
     "websiteURL": "https://www.monologue.to",
+    "supportURL": "https://www.monologue.to/docs/support/contact-support",
     "privacyPolicyURL": "https://www.monologue.to/privacy",
     "termsOfServiceURL": "https://www.monologue.to/terms",
     "defaultPrompt": [
@@ -28,6 +37,67 @@
       "Turn my latest meeting notes into decisions and follow-ups."
     ],
     "brandColor": "#00A9B7",
+    "composerIcon": "./assets/logo.png",
     "logo": "./assets/logo.png"
+  },
+  "extensions": {
+    "com.openai": {
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Find a meeting and report its decisions",
+              "prompt": "What did we decide in the Lumen Bikes website relaunch kickoff?",
+              "tools_triggered": "search_notes, get_note",
+              "expected_behavior": "Finds the note \"Lumen Bikes x Harbor Studio: website relaunch kickoff\" and reports the decisions: keep Shopify and rebuild the theme, launch on March 3 with a soft launch to newsletter subscribers on February 24. Mentions that the rental program page is still an open question."
+            },
+            {
+              "description": "Collect action items across recent notes",
+              "prompt": "List the action items from my three most recent notes, with owners and due dates.",
+              "tools_triggered": "list_recent_notes, get_note",
+              "expected_behavior": "Reads the three newest notes (weekly product sync, website relaunch kickoff, Greenway Deliveries call) and lists their action items with the stated owners and deadlines, for example Jordan Patel publishing a charger help article by Thursday and Priya Shah sending wireframes by Friday. Does not invent owners or dates."
+            },
+            {
+              "description": "Quote the transcript with speaker names",
+              "prompt": "What exactly did Dana Brooks ask for on the Greenway Deliveries call? Quote her.",
+              "tools_triggered": "search_notes, get_note",
+              "expected_behavior": "Opens the Greenway Deliveries note with its transcript and quotes Dana Brooks: 20 Cargo bikes across two depots for about 60 days from February 1, monthly maintenance reports per bike, 48-hour repair turnaround, and whether pilot fees can be credited toward a purchase."
+            },
+            {
+              "description": "Keyword search returns the right note",
+              "prompt": "Search my notes for charger firmware and tell me what the problem is.",
+              "tools_triggered": "search_notes",
+              "expected_behavior": "Returns the weekly product sync note and explains that charger tickets rose from about 40 to 85 a week after firmware 2.3, mostly an amber blinking light fixed by a power cycle, and that a help article is due Thursday."
+            },
+            {
+              "description": "Publish a share link and read the public version",
+              "prompt": "Make my Q1 roadmap ideas note public, then show me what someone with the link will see.",
+              "tools_triggered": "search_notes, set_note_share, get_shared_note",
+              "expected_behavior": "Finds \"Voice memo: Q1 roadmap ideas\", turns sharing on, returns a https://notes.monologue.to/u/... link, then reads the shared note and shows its title, summary, and owner name. If the connection only has notes:read, it explains that sharing needs the notes:write permission instead of failing silently."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Deleting notes is not supported. The plugin has no delete tool, so it must not claim the note was deleted or call set_note_share as a substitute. Expected: the assistant says it can't delete Monologue notes and points the user to the Monologue app.",
+              "prompt": "Delete my note about the Greenway pilot."
+            },
+            {
+              "description": "Editing notes is not supported. The plugin is read-only apart from share links, so it must not claim it changed the stored summary. Expected: the assistant may draft a shorter summary in the chat, but says it can't save it to Monologue.",
+              "prompt": "Rewrite the summary of my website relaunch kickoff note in Monologue so it's shorter."
+            },
+            {
+              "description": "Other accounts' notes are not accessible. The OAuth token only covers the signed-in user's own notes and notes shared with them. Expected: the assistant explains it can't read another person's private notes and offers to search notes Priya shared with the user.",
+              "prompt": "Show me the private notes in my coworker Priya's Monologue account."
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "Monologue does not sell products or process payments through this plugin."
+      },
+      "publication": {
+        "countries": [],
+        "release_notes": "Adds public share links: with the notes:write permission, the plugin can turn a note's public share link on or off, and it reads notes shared with you or opened by a share link. Adds Grok support and moves the repository to the MonologueInc organization."
+      }
+    }
   }
 }

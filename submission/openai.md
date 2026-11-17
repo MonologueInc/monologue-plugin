@@ -2,38 +2,37 @@
 
 ## Listing
 
+The listing, review test cases, and release notes live in [`.codex-plugin/plugin.json`](../.codex-plugin/plugin.json) and import with the plugin ZIP. The root `plugin.json` has no `extensions.com.openai` object, so OpenAI reads these settings from the Codex manifest.
+
 - Name: Monologue
 - Category: Productivity
-- Short description: Search and review your private Monologue voice notes.
-- Long description: Connect Monologue to ChatGPT and Codex to find prior conversations, prepare for meetings, create follow-ups, and synthesize weekly themes. The integration is OAuth-authenticated, owner-scoped, and read-only.
-- MCP server: `https://api.monologue.to/mcp`
+- Short description: Search and review your notes
+- MCP server: `https://api.monologue.to/mcp` (OAuth with Dynamic Client Registration)
 - Website: `https://www.monologue.to`
 - Support: `https://www.monologue.to/docs/support/contact-support`
 - Privacy: `https://www.monologue.to/privacy`
 - Terms: `https://www.monologue.to/terms`
-- Logo: `assets/logo.png`
+- Logo and composer icon: `assets/logo.png`
 
-## Required server declarations
+## Tool annotations
 
-Declare each exposed MCP tool with `readOnlyHint: true`, `destructiveHint: false`, and the appropriate `openWorldHint`. Verify the final annotations in the live tool schema before submitting.
+| Tool | readOnlyHint | destructiveHint | openWorldHint |
+| --- | --- | --- | --- |
+| `list_recent_notes` | true | false | false |
+| `search_notes` | true | false | false |
+| `get_note` | true | false | false |
+| `get_shared_note` | true | false | false |
+| `set_note_share` | false | true | true |
 
-## Positive test cases
+`set_note_share` publishes a note at a public URL or revokes a live link, so it is open-world and destructive. It is idempotent and needs `notes:write`. Verify the live annotations in the portal's tool scan before submitting.
 
-1. List my five most recent Monologue notes and show title, date, and note ID.
-2. Find notes where I discussed onboarding and summarize the recurring themes.
-3. Retrieve the latest note about Acme and identify explicitly assigned follow-ups.
-4. Prepare me for a meeting with Jordan using notes from the last 90 days.
-5. Review this week's notes and separate recorded commitments from suggested next steps.
+## Test cases
 
-## Negative test cases
-
-1. Delete my latest Monologue note. Expected: explain that the integration is read-only and do not claim success.
-2. Show another Monologue user's private notes. Expected: refuse; results are owner-scoped.
-3. Guess the transcript of a note that search did not return. Expected: say that no supporting note was found and do not invent content.
+The five positive and three negative cases in `.codex-plugin/plugin.json` use the fictional notes that the backend script `scripts/seed_directory_reviewer.py` seeds into the reviewer account. Run each one with that account before recording the walkthrough, and turn sharing off again after the share case.
 
 ## Portal-only checklist
 
 - Submit from an OpenAI account with Apps Management Write permission and verified developer or business identity.
-- Complete the MCP domain challenge at `/.well-known/openai-apps-challenge` using the token supplied by the portal.
-- Provide a dedicated reviewer account only through the portal if requested.
-- Re-run the live positive and negative tests and confirm tool annotations immediately before submission.
+- Complete the MCP domain challenge at `/.well-known/openai-apps-challenge`. Set the portal's token as `OAUTH__OPENAI_APPS_CHALLENGE_TOKEN` on the API and deploy.
+- Enter the reviewer account and the video walkthrough URL in **Review details**. Never commit them here.
+- Approve `notes:write` when connecting so the share test case works.

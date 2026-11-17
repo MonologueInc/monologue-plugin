@@ -1,6 +1,6 @@
 # Contributing
 
-Issues and pull requests are welcome. Keep changes portable across Codex, Claude Code, Cursor, Gemini CLI, and the Agent Plugins specification.
+Issues and pull requests are welcome. Keep changes portable across Codex, Claude Code, Cursor, Grok, Gemini CLI, and the Agent Plugins specification.
 
 Before opening a pull request:
 
