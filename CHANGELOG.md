@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 — 2026-11-18
+
+- Publish as Monologue Inc.: author, owner, and developer name in every manifest, and the LICENSE copyright.
+
 ## 1.1.0 — 2026-11-17
 
 - Add the Grok adapter (`.grok-plugin/plugin.json`).

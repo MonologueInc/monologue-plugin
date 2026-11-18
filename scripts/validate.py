@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 NAME = "monologue"
 MCP_URL = "https://api.monologue.to/mcp"
 REPOSITORY = "https://github.com/MonologueInc/monologue-plugin"

@@ -1,9 +1,9 @@
 {
   "name": "monologue",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Search, review, and share your Monologue voice notes from Codex.",
   "author": {
-    "name": "Every Media, Inc.",
+    "name": "Monologue Inc.",
     "email": "support@monologue.to"
   },
   "homepage": "https://www.monologue.to/docs/integrations/mcp",
@@ -16,7 +16,7 @@
     "displayName": "Monologue",
     "shortDescription": "Search and review your notes",
     "longDescription": "Monologue records your meetings and voice notes on Mac, iPhone, and iPad and turns each one into a transcript and a summary. This plugin connects your Monologue account through OAuth so you can work with your own notes: find a meeting by topic or date, prepare for a meeting, turn a meeting into decisions and follow-ups, review your week, and quote who said what from a transcript.\n\nIt can list your recent notes, search them by keyword and date, and read one note with its summary, tags, and transcript. It also reads notes other people shared with you and public notes opened by their share link. If you approve the extra notes:write permission, it can publish or revoke a public share link for a note you own.\n\nIt cannot record new notes, edit or delete notes, or read notes from other accounts. You can revoke access at any time under Settings → Connected apps in the Monologue web app.",
-    "developerName": "Every Media, Inc.",
+    "developerName": "Monologue Inc.",
     "category": "Productivity",
     "capabilities": [
       "Search notes",
