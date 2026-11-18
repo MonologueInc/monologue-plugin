@@ -1,6 +1,6 @@
 {
   "name": "monologue",
-  "version": "1.1.1",
+  "version": "1.0.0",
   "description": "Search, review, and share your Monologue voice notes from Codex.",
   "author": {
     "name": "Monologue Inc.",
@@ -96,7 +96,7 @@
       },
       "publication": {
         "countries": [],
-        "release_notes": "Adds public share links: with the notes:write permission, the plugin can turn a note's public share link on or off, and it reads notes shared with you or opened by a share link. Adds Grok support and moves the repository to the MonologueInc organization."
+        "release_notes": "Initial release: list, search, and read your Monologue notes and transcripts, read notes shared with you or opened by a share link, and, with the notes:write permission, turn a note's public share link on or off. Includes meeting preparation, meeting follow-up, and weekly review skills."
       }
     }
   }
