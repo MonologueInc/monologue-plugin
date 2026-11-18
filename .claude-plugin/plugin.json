@@ -9,5 +9,6 @@
   "homepage": "https://www.monologue.to/docs/integrations/mcp",
   "repository": "https://github.com/MonologueInc/monologue-plugin",
   "license": "MIT",
-  "keywords": ["monologue", "voice-notes", "meeting-notes", "mcp"]
+  "keywords": ["monologue", "voice-notes", "meeting-notes", "mcp"],
+  "privacyPolicyUrl": "https://www.monologue.to/privacy"
 }

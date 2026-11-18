@@ -8,3 +8,4 @@
 - Add meeting preparation, meeting follow-up, weekly review, and general context skills.
 - Add OpenAI review test cases, publication notes, a support URL, and a composer icon to the Codex manifest.
 - Add marketplace submission packets and automated validation.
+- Ship the Claude plugin as the self-contained `claude/` folder for Claude's plugin directory, with validation that keeps its copies in sync.

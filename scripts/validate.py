@@ -21,6 +21,8 @@ MCP_URL = "https://api.monologue.to/mcp"
 REPOSITORY = "https://github.com/MonologueInc/monologue-plugin"
 AGENT_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
 MCP_SCHEMA = "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json"
+CLAUDE_SOURCE = "./claude"
+CLAUDE_ALLOWED_SUFFIXES = {".md", ".txt", ".json", ".yaml", ".yml", ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico"}
 
 REQUIRED_FILES = [
     "plugin.json",
@@ -32,6 +34,11 @@ REQUIRED_FILES = [
     ".claude-plugin/marketplace.json",
     ".cursor-plugin/plugin.json",
     ".grok-plugin/plugin.json",
+    "claude/.claude-plugin/plugin.json",
+    "claude/.mcp.json",
+    "claude/README.md",
+    "claude/LICENSE.txt",
+    "claude/assets/logo.png",
     "gemini-extension.json",
     "GEMINI.md",
     "assets/logo.png",
@@ -111,8 +118,16 @@ def validate_manifests() -> None:
 
     claude = load_json(".claude-plugin/plugin.json")
     require(claude.get("name") == NAME and claude.get("version") == VERSION, "Claude identity is inconsistent")
-    claude_market = load_json(".claude-plugin/marketplace.json")
-    require(claude_market.get("plugins", [{}])[0].get("name") == NAME, "Claude marketplace entry is missing")
+    claude_market = load_json(".claude-plugin/marketplace.json").get("plugins", [{}])[0]
+    require(claude_market.get("name") == NAME, "Claude marketplace entry is missing")
+    require(claude_market.get("source") == CLAUDE_SOURCE, "Claude marketplace must point at the claude/ bundle")
+    bundle = load_json("claude/.claude-plugin/plugin.json")
+    require(bundle.get("name") == NAME and bundle.get("version") == VERSION, "Claude bundle identity is inconsistent")
+    require(bundle.get("repository") == REPOSITORY, "Claude bundle repository URL is incorrect")
+    require(bundle.get("icon") == "./assets/logo.png", "Claude bundle icon is incorrect")
+    require(bundle.get("privacyPolicyUrl", "").startswith("https://"), "Claude bundle privacyPolicyUrl is missing")
+    bundle_mcp = load_json("claude/.mcp.json").get("mcpServers", {})
+    require(bundle_mcp == {NAME: {"type": "http", "url": MCP_URL}}, "Claude bundle MCP server must be only type and url")
 
     grok = load_json(".grok-plugin/plugin.json")
     require(grok.get("name") == NAME and grok.get("version") == VERSION, "Grok identity is inconsistent")
@@ -155,6 +170,30 @@ def validate_skills_and_commands() -> None:
     for path in (ROOT / "commands").glob("*.toml"):
         data = tomllib.loads(path.read_text(encoding="utf-8"))
         require(bool(data.get("description")) and bool(data.get("prompt")), f"{path}: invalid TOML command")
+
+
+def validate_claude_bundle() -> None:
+    bundle = ROOT / CLAUDE_SOURCE
+    for path in sorted(item for item in bundle.rglob("*") if item.is_file()):
+        relative = path.relative_to(bundle)
+        require(path.suffix.lower() in CLAUDE_ALLOWED_SUFFIXES, f"claude/{relative}: file type is not allowed in the Claude bundle")
+        require(not path.read_bytes().startswith(b"#!"), f"claude/{relative}: executable scripts are not allowed in the Claude bundle")
+        require(
+            relative.parts[0] != ".claude-plugin" or relative == Path(".claude-plugin/plugin.json"),
+            f"claude/{relative}: only plugin.json belongs in the bundle's .claude-plugin/",
+        )
+
+    copies = {Path("LICENSE"): Path("LICENSE.txt"), Path("assets/logo.png"): Path("assets/logo.png")}
+    for shared in ("skills", "commands"):
+        for path in (ROOT / shared).rglob("*"):
+            if path.is_file() and path.suffix == ".md":
+                copies[path.relative_to(ROOT)] = path.relative_to(ROOT)
+    for source, copy in copies.items():
+        target = bundle / copy
+        require(target.is_file() and target.read_bytes() == (ROOT / source).read_bytes(), f"claude/{copy} is out of sync with {source}; copy it again")
+    for shared in ("skills", "commands"):
+        extra = {path.relative_to(bundle) for path in (bundle / shared).rglob("*") if path.is_file()} - set(copies.values())
+        require(not extra, f"Claude bundle has files that are not in the shared {shared}/: {sorted(map(str, extra))}")
 
 
 def validate_public_surface() -> None:
@@ -243,6 +282,7 @@ def main() -> int:
         validate_files()
         validate_manifests()
         validate_skills_and_commands()
+        validate_claude_bundle()
         validate_public_surface()
         if args.network:
             validate_network()

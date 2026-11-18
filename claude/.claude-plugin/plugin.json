@@ -1,0 +1,20 @@
+{
+  "name": "monologue",
+  "version": "1.0.0",
+  "description": "Search, review, and share your Monologue voice notes from Claude Code.",
+  "author": {
+    "name": "Monologue Inc.",
+    "email": "support@monologue.to"
+  },
+  "homepage": "https://www.monologue.to/docs/integrations/mcp",
+  "repository": "https://github.com/MonologueInc/monologue-plugin",
+  "license": "MIT",
+  "keywords": [
+    "monologue",
+    "voice-notes",
+    "meeting-notes",
+    "mcp"
+  ],
+  "icon": "./assets/logo.png",
+  "privacyPolicyUrl": "https://www.monologue.to/privacy"
+}

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "monologue": {
+      "type": "http",
+      "url": "https://api.monologue.to/mcp"
+    }
+  }
+}

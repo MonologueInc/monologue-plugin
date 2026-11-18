@@ -10,7 +10,7 @@
   "plugins": [
     {
       "name": "monologue",
-      "source": "./",
+      "source": "./claude",
       "description": "Search, review, and share your Monologue voice notes.",
       "version": "1.0.0"
     }

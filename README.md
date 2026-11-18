@@ -29,6 +29,8 @@ claude plugin marketplace add MonologueInc/monologue-plugin
 claude plugin install monologue@monologue
 ```
 
+The Claude plugin lives in [`claude/`](claude/), a self-contained copy that holds only file types Claude's plugin directory accepts. Its skills, commands, logo, and license are copies of the shared files, and `make validate` fails if they drift.
+
 ### Cursor
 
 Install Monologue from the Cursor Marketplace when the listing is approved. For local development, clone this repository and symlink it into Cursor's plugin directory:
@@ -81,7 +83,7 @@ The first MCP request opens Monologue's browser-based OAuth flow. Reading needs 
 ```sh
 make validate
 make validate-network
-claude plugin validate . --strict
+claude plugin validate claude --strict --profile directory
 ```
 
 Marketplace submission materials live in [`submission/`](submission/). See [`CONTRIBUTING.md`](CONTRIBUTING.md) for release requirements.
